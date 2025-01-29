@@ -7,6 +7,14 @@ local opts = {} -- optional default options
 keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
 keymap.set("i", "kj", "<ESC>", { desc = "Exit insert mode with kj" })
 
+keymap.set("i", "<C-h>", "<Left>", { noremap = true, silent = true })
+keymap.set("i", "<C-l>", "<Right>", { noremap = true, silent = true })
+-- keymap.set("i", "<C-j>", "<Down>", { noremap = true, silent = true })
+-- keymap.set("i", "<C-k>", "<Up>", { noremap = true, silent = true })
+
+keymap.set("i", "<C-b>", "<C-o>^", { noremap = true, silent = true })
+keymap.set("i", "<C-a>", "<C-o>$", { noremap = true, silent = true })
+
 -- Clear search highlights
 keymap.set("n", "<leader>nn", ":nohl<CR>", { desc = "Clear search highlights" })
 
@@ -88,3 +96,6 @@ keymap.set("n", "J", "mzJ`z")
 
 -- Search and replace the word under cursor
 keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+
+-- Open terminal
+keymap.set("n", "<leader>tt", ":terminal<CR>", { desc = "Open terminal" })
