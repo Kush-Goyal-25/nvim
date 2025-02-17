@@ -23,17 +23,17 @@ keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" }) -- incremen
 keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" }) -- decrement
 
 -- Window management
-keymap.set("n", "sv", "<C-w>v", { desc = "Split window vertically" })
-keymap.set("n", "sh", "<C-w>s", { desc = "Split window horizontally" })
-keymap.set("n", "se", "<C-w>=", { desc = "Make splits equal size" })
-keymap.set("n", "sx", ":close<CR>", { desc = "Close current split" })
+keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })
+keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })
+keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" })
+keymap.set("n", "<leader>sx", ":close<CR>", { desc = "Close current split" })
 
 -- Tab management
-keymap.set("n", "to", ":tabnew<CR>", { desc = "Open new tab" })
-keymap.set("n", "tx", ":tabclose<CR>", { desc = "Close current tab" })
-keymap.set("n", "tn", ":tabn<CR>", { desc = "Go to next tab" })
-keymap.set("n", "tp", ":tabp<CR>", { desc = "Go to previous tab" })
-keymap.set("n", "tf", ":tabnew %<CR>", { desc = "Open current buffer in new tab" })
+keymap.set("n", "<leader>to", ":tabnew<CR>", { desc = "Open new tab" })
+keymap.set("n", "<leader>tx", ":tabclose<CR>", { desc = "Close current tab" })
+keymap.set("n", "<leader>tn", ":tabn<CR>", { desc = "Go to next tab" })
+keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "Go to previous tab" })
+keymap.set("n", "<leader>tf", ":tabnew %<CR>", { desc = "Open current buffer in new tab" })
 
 -- Buffer management
 keymap.set("n", "tk", ":blast<CR>", { desc = "Go to last buffer" })
