@@ -1,6 +1,15 @@
 return {
-    "kylechui/nvim-surround",
-    event = { "BufReadPre", "BufNewFile" },
-    version = "*", -- Use for stability; omit to use `main` branch for the latest features
-    config = true,
-  }
+     "kylechui/nvim-surround",
+     event = { "BufReadPre", "BufNewFile" },
+     version = "*", -- Use for stability; omit to use `main` branch for the latest features
+     config = true,
+}
+
+-- ys : surround word
+-- ds : delete
+-- cs : change
+--
+-- iw : in word
+-- yss : surround line
+-- yssf : surround func
+-- t : tag , r : [] , b : () , B : {}
