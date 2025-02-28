@@ -17,16 +17,16 @@ keymap.set("i", "<C-a>", "<C-o>$", { noremap = true, silent = true })
 
 -- Clear search highlights
 keymap.set("n", "<leader>nn", ":nohl<CR>", { desc = "Clear search highlights" })
-
+keymap.set("n", "TT", ":TransparentToggle<CR>", { noremap = true })
 -- Increment/decrement numbers
 keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" }) -- increment
 keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" }) -- decrement
 
 -- Window management
-keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })
-keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })
-keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" })
-keymap.set("n", "<leader>sx", ":close<CR>", { desc = "Close current split" })
+keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" }) -- split window vertically
+keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" }) -- split window horizontally
+keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" }) -- make split windows equal width & height
+keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" }) -- close current split window
 
 -- Tab management
 keymap.set("n", "<leader>to", ":tabnew<CR>", { desc = "Open new tab" })
@@ -48,9 +48,13 @@ keymap.set("n", "E", "$", { desc = "Go to end of line" })
 keymap.set("n", "B", "^", { desc = "Go to beginning of line" })
 
 -- Save and close mappings
-keymap.set("n", "wa", ":wqa<CR>", { desc = "Save and close all" })
-keymap.set("n", "wq", ":wq<CR>", { desc = "Save and close current" })
-keymap.set("n", "qq", ":qa<CR>", { desc = "Quit all" }) -- Fixed `qq` to quit all buffers
+keymap.set("n", "<leader>wa", ":wqa<CR>", { desc = "Save and close all" })
+keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "Save and close current" })
+keymap.set("n", "<leader>qq", ":qa<CR>", { desc = "Quit all" }) -- Fixed `qq` to quit all buffers
+keymap.set("n", "<leader>qa", ":qa!<cr>", { desc = "Close all without saving" }) -- Close all buffers without saving
+
+-- Move to the first non-blank character of the line
+keymap.set("n", "<BS>", "^", { desc = "Move to first non-blank character of the line" })
 
 -- Center screen after scrolling
 keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Center screen after page up" })
@@ -61,8 +65,8 @@ keymap.set("n", "n", "nzzzv", { desc = "Keep cursor centered after searching for
 keymap.set("n", "N", "Nzzzv", { desc = "Keep cursor centered after searching backward" })
 
 -- Select all
-keymap.set("n", "pa", "ggVGp", { desc = "Select all and paste" })
-keymap.set("n", "sa", "ggVG", { desc = "Select all" })
+keymap.set("n", "<leader>pa", "ggVGp", { desc = "Select all and paste" })
+keymap.set("n", "<leader>sa", "ggVG", { desc = "Select all" })
 
 -- Indentation and selection
 keymap.set("v", "<", "<gv^", opts)

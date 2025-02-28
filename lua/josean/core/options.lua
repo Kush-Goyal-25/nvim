@@ -11,8 +11,10 @@ opt.guicursor = ""
 -- tabs & indentation
 opt.tabstop = 4 -- 2 spaces for tabs (prettier default)
 opt.shiftwidth = 4 -- 2 spaces for indent width
+opt.softtabstop = 4
 opt.expandtab = true -- expand tab to spaces
 opt.autoindent = true -- copy indent from current line when starting new one
+opt.smartindent = true
 
 opt.wrap = false
 
@@ -22,7 +24,7 @@ opt.smartcase = true -- if you include mixed case in your search, assumes you wa
 opt.incsearch = true -- if you include mixed case in your search, assumes you want case-sensitive
 opt.scrolloff = 8
 opt.cursorline = true
-
+opt.undofile = true
 -- turn on termguicolors for tokyonight colorscheme to work
 -- (have to use iterm2 or any other true color terminal)
 opt.termguicolors = true
@@ -48,9 +50,18 @@ opt.swapfile = false
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
-   callback = function()
-      vim.highlight.on_yank()
-   end,
-   group = highlight_group,
-   pattern = "*",
+     callback = function()
+          vim.highlight.on_yank()
+     end,
+     group = highlight_group,
+     pattern = "*",
+})
+
+-- [[ Remove trailing whitespace on save ]]
+-- Define the augroup for ThePrimeagenGroup
+local ThePrimeagenGroup = vim.api.nvim_create_augroup("ThePrimeagenGroup", { clear = true })
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+     group = ThePrimeagenGroup,
+     pattern = "*",
+     command = [[%s/\s\+$//e]],
 })
