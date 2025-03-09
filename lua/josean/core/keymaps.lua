@@ -36,12 +36,12 @@ keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "Go to previous tab" })
 keymap.set("n", "<leader>tf", ":tabnew %<CR>", { desc = "Open current buffer in new tab" })
 
 -- Buffer management
-keymap.set("n", "tk", ":blast<CR>", { desc = "Go to last buffer" })
-keymap.set("n", "tj", ":bfirst<CR>", { desc = "Go to first buffer" })
+keymap.set("n", "<leader>tk", ":blast<CR>", { desc = "Go to last buffer" })
+keymap.set("n", "<leader>tj", ":bfirst<CR>", { desc = "Go to first buffer" })
 
 -- Force quit and force write
-keymap.set("n", "QQ", ":q!<CR>", { desc = "Force quit" })
-keymap.set("n", "WW", ":w!<CR>", { desc = "Force write" })
+keymap.set("n", "<leader>qq", ":q!<CR>", { desc = "Force quit" })
+keymap.set("n", "<leader>ww", ":w!<CR>", { desc = "Force write" })
 
 -- Navigate to start or end of line
 keymap.set("n", "E", "$", { desc = "Go to end of line" })
