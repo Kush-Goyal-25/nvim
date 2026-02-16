@@ -18,9 +18,6 @@ return {
           local lspconfig = require("lspconfig")
           require("fidget").setup({})
 
-          -- import mason_lspconfig plugin
-          local mason_lspconfig = require("mason-lspconfig")
-
           -- import cmp-nvim-lsp plugin
           local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
@@ -29,6 +26,17 @@ return {
           vim.api.nvim_create_autocmd("LspAttach", {
                group = vim.api.nvim_create_augroup("UserLspConfig", {}),
                callback = function(ev)
+                    -- Detach LSP from Harpoon menu buffer to avoid Neovim LSP sync bug (#33224).
+                    -- Only detach when we're sure it's Harpoon (name/filetype/buftype) to avoid
+                    -- triggering the buf_state nil error in _changetracking.lua after detach.
+                    local ft = vim.bo[ev.buf].filetype
+                    local name = vim.api.nvim_buf_get_name(ev.buf)
+                    local bt = vim.bo[ev.buf].buftype
+                    if ft == "harpoon" or bt == "acwrite" or name:find("harpoon%-menu") then
+                         pcall(vim.lsp.buf_detach_client, ev.buf, ev.data.client_id)
+                         return
+                    end
+
                     -- Buffer local mappings.
                     -- See `:help vim.lsp.*` for documentation on any of the below functions
                     local opts = { buffer = ev.buf, silent = true }
@@ -86,68 +94,80 @@ return {
                vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
           end
 
-          mason_lspconfig.setup_handlers({
-               -- default handler for installed servers
-               function(server_name)
-                    lspconfig[server_name].setup({
-                         capabilities = capabilities,
-                    })
-               end,
-               ["svelte"] = function()
-                    -- configure svelte server
-                    lspconfig["svelte"].setup({
+          -- mason-lspconfig v2: no setup_handlers; register configs via vim.lsp.config (Neovim 0.11+)
+          -- then mason-lspconfig will auto-enable installed servers
+          if vim.lsp and vim.lsp.config then
+               local default_config = { capabilities = capabilities }
+               local servers_with_custom = {
+                    svelte = {
                          capabilities = capabilities,
                          on_attach = function(client, bufnr)
                               vim.api.nvim_create_autocmd("BufWritePost", {
                                    pattern = { "*.js", "*.ts" },
                                    callback = function(ctx)
-                                        -- Here use ctx.match instead of ctx.file
                                         client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
                                    end,
                               })
                          end,
-                    })
-               end,
-               ["graphql"] = function()
-                    -- configure graphql language server
-                    lspconfig["graphql"].setup({
+                    },
+                    graphql = {
                          capabilities = capabilities,
                          filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
-                    })
-               end,
-               ["emmet_ls"] = function()
-                    -- configure emmet language server
-                    lspconfig["emmet_ls"].setup({
+                    },
+                    emmet_ls = {
                          capabilities = capabilities,
                          filetypes = {
-                              "html",
-                              "typescriptreact",
-                              "javascriptreact",
-                              "css",
-                              "sass",
-                              "scss",
-                              "less",
-                              "svelte",
+                              "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte",
                          },
-                    })
-               end,
-               ["lua_ls"] = function()
-                    -- configure lua server (with special settings)
-                    lspconfig["lua_ls"].setup({
+                    },
+                    lua_ls = {
                          capabilities = capabilities,
                          settings = {
                               Lua = {
-                                   -- make the language server recognize "vim" global
-                                   diagnostics = {
-                                        globals = { "vim" },
-                                   },
-                                   completion = {
-                                        callSnippet = "Replace",
-                                   },
+                                   diagnostics = { globals = { "vim" } },
+                                   completion = { callSnippet = "Replace" },
                               },
                          },
-                    })
-               end,
-          })
+                    },
+               }
+               for server_name, server_config in pairs(servers_with_custom) do
+                    vim.lsp.config(server_name, server_config)
+               end
+               -- Register default (capabilities only) for other mason-installed servers
+               local other_servers = { "html", "cssls", "tailwindcss", "prismals", "pyright", "ts_ls" }
+               for _, server_name in ipairs(other_servers) do
+                    if not servers_with_custom[server_name] then
+                         vim.lsp.config(server_name, default_config)
+                    end
+               end
+          else
+               -- Fallback for Neovim < 0.11: use lspconfig and manual setup
+               local function setup_server(server_name, opts)
+                    opts = vim.tbl_extend("force", { capabilities = capabilities }, opts or {})
+                    lspconfig[server_name].setup(opts)
+               end
+               setup_server("svelte", {
+                    on_attach = function(client)
+                         vim.api.nvim_create_autocmd("BufWritePost", {
+                              pattern = { "*.js", "*.ts" },
+                              callback = function(ctx)
+                                   client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
+                              end,
+                         })
+                    end,
+               })
+               setup_server("graphql", { filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" } })
+               setup_server("emmet_ls", {
+                    filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
+               })
+               setup_server("lua_ls", {
+                    settings = {
+                         Lua = { diagnostics = { globals = { "vim" } }, completion = { callSnippet = "Replace" } },
+                    },
+               })
+               for _, server_name in ipairs({ "html", "cssls", "tailwindcss", "prismals", "pyright", "ts_ls" }) do
+                    setup_server(server_name)
+               end
+          end
      end,
 }

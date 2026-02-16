@@ -1,4 +1,5 @@
-function ColorMyPencils(color)
+-- Define ColorMyPencils globally so it can be used by other plugins (e.g., zen-mode)
+_G.ColorMyPencils = function(color)
      color = color or "rose-pine"
      vim.cmd.colorscheme(color)
 
@@ -38,8 +39,7 @@ return {
                })
 
                vim.cmd("colorscheme rose-pine")
-
-               ColorMyPencils()
+               _G.ColorMyPencils("rose-pine")
           end,
      },
 }
