@@ -4,8 +4,8 @@ local keymap = vim.keymap -- for conciseness
 local opts = {} -- optional default options
 
 -- Exit insert mode with jk or kj
-keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
-keymap.set("i", "kj", "<ESC>", { desc = "Exit insert mode with kj" })
+-- keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
+-- keymap.set("i", "kj", "<ESC>", { desc = "Exit insert mode with kj" })
 
 keymap.set("i", "<C-h>", "<Left>", { noremap = true, silent = true })
 keymap.set("i", "<C-l>", "<Right>", { noremap = true, silent = true })
@@ -14,6 +14,7 @@ keymap.set("i", "<C-l>", "<Right>", { noremap = true, silent = true })
 
 keymap.set("i", "<C-b>", "<C-o>^", { noremap = true, silent = true })
 keymap.set("i", "<C-a>", "<C-o>$", { noremap = true, silent = true })
+keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>", { noremap = true, silent = true })
 
 -- Clear search highlights
 keymap.set("n", "<leader>nn", ":nohl<CR>", { desc = "Clear search highlights" })
