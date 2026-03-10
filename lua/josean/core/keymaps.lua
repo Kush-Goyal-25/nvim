@@ -11,7 +11,7 @@ keymap.set("i", "<C-h>", "<Left>", { noremap = true, silent = true })
 keymap.set("i", "<C-l>", "<Right>", { noremap = true, silent = true })
 -- keymap.set("i", "<C-j>", "<Down>", { noremap = true, silent = true })
 -- keymap.set("i", "<C-k>", "<Up>", { noremap = true, silent = true })
-
+keymap.set("n", "Q", "<nop>")
 keymap.set("i", "<C-b>", "<C-o>^", { noremap = true, silent = true })
 keymap.set("i", "<C-a>", "<C-o>$", { noremap = true, silent = true })
 keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>", { noremap = true, silent = true })
