@@ -18,6 +18,7 @@ keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>", { norema
 
 -- Clear search highlights
 keymap.set("n", "<leader>nn", ":nohl<CR>", { desc = "Clear search highlights" })
+keymap.set("n", "<C-c>", ":nohl<CR>", { desc = "Clear search hl", silent = true })
 keymap.set("n", "TT", ":TransparentToggle<CR>", { noremap = true })
 -- Increment/decrement numbers
 keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" }) -- increment
@@ -46,16 +47,15 @@ keymap.set("n", "<leader>ww", ":w!<CR>", { desc = "Force write" })
 
 -- Navigate to start or end of line
 keymap.set("n", "E", "$", { desc = "Go to end of line" })
-keymap.set("n", "B", "^", { desc = "Go to beginning of line" })
+-- keymap.set("n", "B", "^", { desc = "Go to beginning of line" })
+-- Move to the first non-blank character of the line
+keymap.set("n", "<BS>", "^", { desc = "Move to first non-blank character of the line" })
 
 -- Save and close mappings
 keymap.set("n", "<leader>wa", ":wqa<CR>", { desc = "Save and close all" })
 keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "Save and close current" })
 keymap.set("n", "<leader>qq", ":qa<CR>", { desc = "Quit all" }) -- Fixed `qq` to quit all buffers
 keymap.set("n", "<leader>qa", ":qa!<cr>", { desc = "Close all without saving" }) -- Close all buffers without saving
-
--- Move to the first non-blank character of the line
-keymap.set("n", "<BS>", "^", { desc = "Move to first non-blank character of the line" })
 
 -- Center screen after scrolling
 keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Center screen after page up" })
@@ -67,7 +67,7 @@ keymap.set("n", "N", "Nzzzv", { desc = "Keep cursor centered after searching bac
 
 -- Select all
 keymap.set("n", "<leader>pa", "ggVGp", { desc = "Select all and paste" })
-keymap.set("n", "<leader>sa", "ggVG", { desc = "Select all" })
+keymap.set("n", "<leader>A", "ggVG", { desc = "Select all" })
 
 -- Indentation and selection
 keymap.set("v", "<", "<gv^", opts)
@@ -104,3 +104,9 @@ keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left
 
 -- Open terminal
 keymap.set("n", "<leader>tt", ":terminal<CR>", { desc = "Open terminal" })
+
+vim.keymap.set("n", "<leader>fp", function()
+     local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
+     vim.fn.setreg("+", filePath) -- Copy the file path to the clipboard register
+     print("File path copied to clipboard: " .. filePath)
+end, { desc = "Copy file path to clipboard" })
