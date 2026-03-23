@@ -17,7 +17,7 @@ keymap.set("i", "<C-a>", "<C-o>$", { noremap = true, silent = true })
 keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>", { noremap = true, silent = true })
 
 -- Clear search highlights
-keymap.set("n", "<leader>nn", ":nohl<CR>", { desc = "Clear search highlights" })
+-- keymap.set("n", "<leader>nn", ":nohl<CR>", { desc = "Clear search highlights" })
 keymap.set("n", "<C-c>", ":nohl<CR>", { desc = "Clear search hl", silent = true })
 keymap.set("n", "TT", ":TransparentToggle<CR>", { noremap = true })
 -- Increment/decrement numbers
@@ -67,7 +67,7 @@ keymap.set("n", "N", "Nzzzv", { desc = "Keep cursor centered after searching bac
 
 -- Select all
 keymap.set("n", "<leader>pa", "ggVGp", { desc = "Select all and paste" })
-keymap.set("n", "<leader>A", "ggVG", { desc = "Select all" })
+keymap.set("n", "<leader>aa", "ggVG", { desc = "Select all" })
 
 -- Indentation and selection
 keymap.set("v", "<", "<gv^", opts)
