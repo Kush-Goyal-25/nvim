@@ -103,7 +103,7 @@ keymap.set("n", "J", "mzJ`z")
 keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 -- Open terminal
-keymap.set("n", "<leader>tt", ":terminal<CR>", { desc = "Open terminal" })
+-- keymap.set("n", "<leader>tt", ":terminal<CR>", { desc = "Open terminal" })
 
 vim.keymap.set("n", "<leader>fp", function()
      local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
