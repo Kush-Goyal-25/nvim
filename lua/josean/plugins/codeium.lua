@@ -10,7 +10,7 @@ return {
           })
 
           -- Toggle neocodeium on/off in normal mode
-          vim.keymap.set("n", "<leader>nc", function()
+          vim.keymap.set("n", "<leader>nn", function()
                commands.toggle()
                local status = neocodeium.get_status and neocodeium.get_status() or "toggled"
                vim.notify("Neocodeium " .. (status == 0 and "enabled" or "disabled"), vim.log.levels.INFO)
