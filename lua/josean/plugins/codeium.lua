@@ -17,7 +17,7 @@ return {
           end, { desc = "Toggle Neocodeium" })
 
           -- Accept full suggestion
-          vim.keymap.set("i", "<A-f>", function()
+          vim.keymap.set("i", "<A-y>", function()
                neocodeium.accept()
           end, { desc = "Neocodeium: Accept suggestion" })
 
