@@ -117,7 +117,14 @@ return {
                     emmet_ls = {
                          capabilities = capabilities,
                          filetypes = {
-                              "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte",
+                              "html",
+                              "typescriptreact",
+                              "javascriptreact",
+                              "css",
+                              "sass",
+                              "scss",
+                              "less",
+                              "svelte",
                          },
                     },
                     lua_ls = {
@@ -156,9 +163,21 @@ return {
                          })
                     end,
                })
-               setup_server("graphql", { filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" } })
+               setup_server(
+                    "graphql",
+                    { filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" } }
+               )
                setup_server("emmet_ls", {
-                    filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
+                    filetypes = {
+                         "html",
+                         "typescriptreact",
+                         "javascriptreact",
+                         "css",
+                         "sass",
+                         "scss",
+                         "less",
+                         "svelte",
+                    },
                })
                setup_server("lua_ls", {
                     settings = {

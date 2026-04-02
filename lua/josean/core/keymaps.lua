@@ -67,7 +67,7 @@ keymap.set("n", "N", "Nzzzv", { desc = "Keep cursor centered after searching bac
 
 -- Select all
 keymap.set("n", "<leader>pa", "ggVGp", { desc = "Select all and paste" })
-keymap.set("n", "<leader>aa", "ggVG", { desc = "Select all" })
+keymap.set("n", "<leader>kk", "ggVG", { desc = "Select all" })
 
 -- Indentation and selection
 keymap.set("v", "<", "<gv^", opts)
