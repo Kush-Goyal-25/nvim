@@ -32,6 +32,9 @@ opt.background = "dark" -- colorschemes that can be light or dark will be made d
 opt.signcolumn = "yes" -- show sign column so that text doesn't shift
 opt.colorcolumn = "80"
 opt.updatetime = 50
+vim.g.netrw_banner = 0 -- hide banner
+vim.g.netrw_winsize = 25 -- 25% width
+vim.g.netrw_liststyle = 3
 
 -- backspace
 opt.backspace = "indent,eol,start" -- allow backspace on indent, end of line or insert mode start position
