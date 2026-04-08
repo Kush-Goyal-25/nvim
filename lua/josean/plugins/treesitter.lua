@@ -1,136 +1,140 @@
+-- treesitter.lua
+-- Place this file in: ~/.config/nvim/lua/plugins/treesitter.lua
+
 return {
      {
           "nvim-treesitter/nvim-treesitter",
-          version = "v0.9.3",
-          event = { "BufReadPre", "BufNewFile" },
+          lazy = false,
           build = ":TSUpdate",
           dependencies = {
                "windwp/nvim-ts-autotag",
                "nvim-treesitter/nvim-treesitter-textobjects",
           },
           config = function()
-               require("nvim-treesitter.configs").setup({
-                    ensure_installed = {
-                         "json",
-                         "javascript",
-                         "typescript",
-                         "tsx",
-                         "yaml",
-                         "html",
-                         "css",
-                         "cpp",
-                         "prisma",
-                         "markdown",
-                         "markdown_inline",
-                         "svelte",
-                         "graphql",
-                         "bash",
-                         "lua",
-                         "vim",
-                         "dockerfile",
-                         "gitignore",
-                         "query",
-                         "vimdoc",
-                         "c",
-                    },
-                    auto_install = true,
-                    highlight = { enable = true },
-                    indent = { enable = true },
-                    autotag = { enable = true },
-                    incremental_selection = {
-                         enable = true,
-                         keymaps = {
-                              init_selection = "<C-space>",
-                              node_incremental = "<C-space>",
-                              scope_incremental = false,
-                              node_decremental = "<bs>",
-                         },
-                    },
+               -- ─── Core Setup ─────────────────────────────────────────────────────
+               require("nvim-treesitter").setup({
+                    install_dir = vim.fn.stdpath("data") .. "/site",
                })
 
-               -- ✅ New textobjects API using new module path
+               require("nvim-treesitter").install({
+                    "lua",
+                    "vim",
+                    "vimdoc",
+                    "query",
+                    "bash",
+                    "json",
+                    "yaml",
+                    "markdown",
+                    "markdown_inline",
+                    "html",
+                    "css",
+                    "javascript",
+                    "typescript",
+                    "tsx",
+                    "go",
+                    "c",
+                    "cpp",
+                    "python",
+               })
+
+               -- ─── Auto-close / rename HTML tags ───────────────────────────────────
+               require("nvim-ts-autotag").setup()
+
+               -- ─── Highlighting via autocmd ────────────────────────────────────────
+               vim.api.nvim_create_autocmd("FileType", {
+                    pattern = "*",
+                    callback = function(args)
+                         local buf = args.buf
+                         local max_filesize = 100 * 1024 -- 100 KB
+                         local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
+                         if ok and stats and stats.size > max_filesize then
+                              return
+                         end
+                         local ok2, ts = pcall(vim.treesitter.get_parser, buf)
+                         if ok2 and ts then
+                              vim.treesitter.start()
+                         end
+                    end,
+               })
+
+               -- ─── Folding ─────────────────────────────────────────────────────────
+               vim.wo.foldmethod = "expr"
+               vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+
+               -- ─── Text Objects: Select ────────────────────────────────────────────
                local select = require("nvim-treesitter-textobjects.select")
+
+               local select_maps = {
+                    ["a="] = { "@assignment.outer", "Select outer part of an assignment" },
+                    ["i="] = { "@assignment.inner", "Select inner part of an assignment" },
+                    ["l="] = { "@assignment.lhs", "Select left hand side of an assignment" },
+                    ["r="] = { "@assignment.rhs", "Select right hand side of an assignment" },
+                    ["aa"] = { "@parameter.outer", "Select outer part of a parameter/argument" },
+                    ["ia"] = { "@parameter.inner", "Select inner part of a parameter/argument" },
+                    ["ai"] = { "@conditional.outer", "Select outer part of a conditional" },
+                    ["ii"] = { "@conditional.inner", "Select inner part of a conditional" },
+                    ["al"] = { "@loop.outer", "Select outer part of a loop" },
+                    ["il"] = { "@loop.inner", "Select inner part of a loop" },
+                    ["af"] = { "@call.outer", "Select outer part of a function call" },
+                    ["if"] = { "@call.inner", "Select inner part of a function call" },
+                    ["am"] = { "@function.outer", "Select outer part of a method/function def" },
+                    ["im"] = { "@function.inner", "Select inner part of a method/function def" },
+                    ["ac"] = { "@class.outer", "Select outer part of a class" },
+                    ["ic"] = { "@class.inner", "Select inner part of a class" },
+                    ["ak"] = { "@comment.outer", "Select comment" },
+               }
+
+               for key, val in pairs(select_maps) do
+                    vim.keymap.set({ "x", "o" }, key, function()
+                         select.select_textobject(val[1], "textobjects")
+                    end, { desc = val[2] })
+               end
+
+               -- ─── Text Objects: Move ──────────────────────────────────────────────
                local move = require("nvim-treesitter-textobjects.move")
 
-               -- SELECT textobjects (use in visual mode or with operator)
-               local select_keymaps = {
-                    ["a="] = { query = "@assignment.outer", desc = "Select outer part of an assignment" },
-                    ["i="] = { query = "@assignment.inner", desc = "Select inner part of an assignment" },
-                    ["l="] = { query = "@assignment.lhs", desc = "Select left hand side of an assignment" },
-                    ["r="] = { query = "@assignment.rhs", desc = "Select right hand side of an assignment" },
-                    ["aa"] = { query = "@parameter.outer", desc = "Select outer part of a parameter/argument" },
-                    ["ia"] = { query = "@parameter.inner", desc = "Select inner part of a parameter/argument" },
-                    ["ai"] = { query = "@conditional.outer", desc = "Select outer part of a conditional" },
-                    ["ii"] = { query = "@conditional.inner", desc = "Select inner part of a conditional" },
-                    ["al"] = { query = "@loop.outer", desc = "Select outer part of a loop" },
-                    ["il"] = { query = "@loop.inner", desc = "Select inner part of a loop" },
-                    ["af"] = { query = "@call.outer", desc = "Select outer part of a function call" },
-                    ["if"] = { query = "@call.inner", desc = "Select inner part of a function call" },
-                    ["am"] = { query = "@function.outer", desc = "Select outer part of a method/function def" },
-                    ["im"] = { query = "@function.inner", desc = "Select inner part of a method/function def" },
-                    ["ac"] = { query = "@class.outer", desc = "Select outer part of a class" },
-                    ["ic"] = { query = "@class.inner", desc = "Select inner part of a class" },
+               local move_maps = {
+                    ["]f"] = { "@call.outer", "next", "Next function call start" },
+                    ["[f"] = { "@call.outer", "prev", "Prev function call start" },
+                    ["]m"] = { "@function.outer", "next", "Next method/function def start" },
+                    ["[m"] = { "@function.outer", "prev", "Prev method/function def start" },
+                    ["]c"] = { "@class.outer", "next", "Next class start" },
+                    ["[c"] = { "@class.outer", "prev", "Prev class start" },
+                    ["]i"] = { "@conditional.outer", "next", "Next conditional start" },
+                    ["[i"] = { "@conditional.outer", "prev", "Prev conditional start" },
+                    ["]l"] = { "@loop.outer", "next", "Next loop start" },
+                    ["[l"] = { "@loop.outer", "prev", "Prev loop start" },
+                    ["]a"] = { "@parameter.inner", "next", "Next parameter" },
+                    ["[a"] = { "@parameter.inner", "prev", "Prev parameter" },
                }
 
-               for key, mapping in pairs(select_keymaps) do
-                    vim.keymap.set({ "x", "o" }, key, function()
-                         select.select_textobject(mapping.query, "textobjects")
-                    end, { desc = mapping.desc })
-               end
-
-               -- MOVE textobjects (use in normal mode)
-               local move_keymaps = {
-                    ["]f"] = {
-                         query = "@call.outer",
-                         dir = "next",
-                         start = true,
-                         desc = "Next function call start",
-                    },
-                    ["]m"] = {
-                         query = "@function.outer",
-                         dir = "next",
-                         start = true,
-                         desc = "Next method/function def start",
-                    },
-                    ["]c"] = { query = "@class.outer", dir = "next", start = true, desc = "Next class start" },
-                    ["]i"] = {
-                         query = "@conditional.outer",
-                         dir = "next",
-                         start = true,
-                         desc = "Next conditional start",
-                    },
-                    ["]l"] = { query = "@loop.outer", dir = "next", start = true, desc = "Next loop start" },
-                    ["[f"] = {
-                         query = "@call.outer",
-                         dir = "prev",
-                         start = true,
-                         desc = "Prev function call start",
-                    },
-                    ["[m"] = {
-                         query = "@function.outer",
-                         dir = "prev",
-                         start = true,
-                         desc = "Prev method/function def start",
-                    },
-                    ["[c"] = { query = "@class.outer", dir = "prev", start = true, desc = "Prev class start" },
-                    ["[i"] = {
-                         query = "@conditional.outer",
-                         dir = "prev",
-                         start = true,
-                         desc = "Prev conditional start",
-                    },
-                    ["[l"] = { query = "@loop.outer", dir = "prev", start = true, desc = "Prev loop start" },
-               }
-
-               for key, mapping in pairs(move_keymaps) do
+               for key, val in pairs(move_maps) do
                     vim.keymap.set({ "n", "x", "o" }, key, function()
-                         if mapping.dir == "next" then
-                              move.goto_next_start(mapping.query, "textobjects")
+                         if val[2] == "next" then
+                              move.goto_next_start(val[1], "textobjects")
                          else
-                              move.goto_previous_start(mapping.query, "textobjects")
+                              move.goto_previous_start(val[1], "textobjects")
                          end
-                    end, { desc = mapping.desc })
+                    end, { desc = val[3] })
                end
+
+               -- ─── Swap Parameters ─────────────────────────────────────────────────
+               local swap = require("nvim-treesitter-textobjects.swap")
+               vim.keymap.set("n", "<leader>sn", function()
+                    swap.swap_next("@parameter.inner")
+               end, { desc = "Swap with next parameter" })
+               vim.keymap.set("n", "<leader>sp", function()
+                    swap.swap_previous("@parameter.inner")
+               end, { desc = "Swap with prev parameter" })
+
+               -- ─── Repeatable Moves via ; and , ────────────────────────────────────
+               local rep = require("nvim-treesitter-textobjects.repeatable_move")
+               vim.keymap.set({ "n", "x", "o" }, ";", rep.repeat_last_move_next)
+               vim.keymap.set({ "n", "x", "o" }, ",", rep.repeat_last_move_previous)
+               vim.keymap.set({ "n", "x", "o" }, "f", rep.builtin_f_expr, { expr = true })
+               vim.keymap.set({ "n", "x", "o" }, "F", rep.builtin_F_expr, { expr = true })
+               vim.keymap.set({ "n", "x", "o" }, "t", rep.builtin_t_expr, { expr = true })
+               vim.keymap.set({ "n", "x", "o" }, "T", rep.builtin_T_expr, { expr = true })
           end,
      },
 }
