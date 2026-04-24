@@ -22,19 +22,32 @@ return {
           local keymap = vim.keymap
 
           -- ==================== COOL LSP HOVER ====================
-          vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-               border = "rounded", -- Rounded borders (modern look)
-               style = "minimal",
-               focusable = false,
-               silent = true,
-          })
+          vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, config)
+               vim.lsp.handlers.hover(
+                    err,
+                    result,
+                    ctx,
+                    vim.tbl_extend("force", config or {}, {
+                         border = "rounded",
+                         style = "minimal",
+                         focusable = false,
+                         silent = true,
+                    })
+               )
+          end
 
-          -- Also improve signature help (when you type `(` )
-          vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-               border = "rounded",
-               focusable = false,
-               silent = true,
-          })
+          vim.lsp.handlers["textDocument/signatureHelp"] = function(err, result, ctx, config)
+               vim.lsp.handlers.signature_help(
+                    err,
+                    result,
+                    ctx,
+                    vim.tbl_extend("force", config or {}, {
+                         border = "rounded",
+                         focusable = false,
+                         silent = true,
+                    })
+               )
+          end
 
           -- Diagnostic configuration (floating window)
           vim.diagnostic.config({
