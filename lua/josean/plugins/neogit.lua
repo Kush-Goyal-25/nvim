@@ -20,18 +20,8 @@ return {
                ":Neogit commit<CR>",
                { silent = true, noremap = true, desc = "Neogit commit" }
           )
-          vim.keymap.set(
-               "n",
-               "<leader>gp",
-               ":Neogit pull<CR>",
-               { silent = true, noremap = true, desc = "Neogit pull" }
-          )
-          vim.keymap.set(
-               "n",
-               "<leader>gP",
-               ":Neogit push<CR>",
-               { silent = true, noremap = true, desc = "Neogit push" }
-          )
+          vim.keymap.set("n", "<leader>gp", ":Neogit pull<CR>", { silent = true, noremap = true, desc = "Neogit pull" })
+          vim.keymap.set("n", "<leader>gP", ":Neogit push<CR>", { silent = true, noremap = true, desc = "Neogit push" })
           vim.keymap.set(
                "n",
                "<leader>gb",

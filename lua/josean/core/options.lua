@@ -40,7 +40,7 @@ vim.g.netrw_liststyle = 3
 opt.backspace = "indent,eol,start" -- allow backspace on indent, end of line or insert mode start position
 
 -- clipboard
-opt.clipboard:append("unnamedplus") -- use system clipboard as default register
+-- opt.clipboard:append("unnamedplus") -- use system clipboard as default register
 vim.opt.clipboard = "unnamedplus"
 
 -- split windows
@@ -55,7 +55,7 @@ opt.swapfile = false
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
      callback = function()
-          vim.highlight.on_yank()
+          vim.hl.on_yank()
      end,
      group = highlight_group,
      pattern = "*",
