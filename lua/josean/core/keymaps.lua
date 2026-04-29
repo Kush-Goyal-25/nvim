@@ -63,6 +63,9 @@ keymap.set("n", "<leader>qa", ":qa!<cr>", { desc = "Close all without saving" })
 keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Center screen after page up" })
 keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Center screen after page down" })
 
+-- Go Error Handling shortcuts
+keymap.set("n", "<leader>ge", "oif err != nil {<CR>}<Esc>Oreturn err<Esc>")
+
 -- Keep cursor centered when searching
 keymap.set("n", "n", "nzzzv", { desc = "Keep cursor centered after searching forward" })
 keymap.set("n", "N", "Nzzzv", { desc = "Keep cursor centered after searching backward" })
